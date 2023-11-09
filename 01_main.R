@@ -5,6 +5,7 @@ library(sf)
 library(tabularaster)
 library(terra)
 library(tidyverse)
+library(viridis)
 library(yaml)
 
 config <- yaml.load_file("./config.yaml", eval.expr=TRUE)
@@ -25,12 +26,15 @@ zon.rec.fish <- raster(paste(config$zonation.recfish, "output", "merged_rankmap.
 rstack <- raster::stack(zon.sc.bio, zon.rec.fish)
 stats.pearson <- layerStats(rstack, stat = "pearson", na.rm = TRUE)
 print(stats.pearson)
-cor.ras <- corLocal(zon.sc.bio, zon.rec.fish, test = T)
+rm(stats.pearson, rstack)
 
-# Plot correlation raster
+# Plot Pearson's correlation raster (R and P-values)
+cor.ras <- corLocal(zon.sc.bio, zon.rec.fish, test = T)
 png(paste(config$figs, "correlation_raster.png", sep=""), width = 1200, height = 800)
 plot(cor.ras)
 dev.off()
+rm(cor.ras)
+
 
 # Zonation rec fishing and biodiversity to dataframes
 df <- cbind.data.frame(values(zon.rec.fish), values(zon.sc.bio))
@@ -52,18 +56,23 @@ for (i in 1:100) {
         add_row(Method = "spearman", Value=s)
 }
 
+rm(df, sdf, df.clean)
+rm(p,k,s)
+
 # Create and save boxplot with correlation values
 
-corr.plot <- ggplot(plot.df, aes(x=Method, y=Value)) + geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+corr.plot <- ggplot(plot.df, aes(x=Method, y=Value)) + 
+    geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
     scale_fill_viridis(discrete = TRUE, alpha=0.6) +
-    geom_jitter(color="black", size=0.4, width=0.2) +
-    theme_classic()
-
+    geom_jitter(color="black", size=0.4, width=0.2)
 ggsave(
     paste(config$figs, "correlation_boxplot.png", sep=""),
     corr.plot,
+    width=4, height=5,
     dpi="retina"
 )
+rm(corr.plot)
+rm(plot.df)
 
 # Get cells that fall within the HPAs
 
@@ -87,15 +96,19 @@ for (hpa.name in unique(hpas$NAME)) {
                           x = "Biodiversity",
                           y = "Rec fishing",
                           title = hpa.name) +
-        stat_cor(method = "pearson")
+        stat_cor(method = "pearson") 
     
     ggsave(
         paste(config$figs, hpa.name, ".png", sep=""),
         hpa.plot,
+        width=6, height=4,
         dpi="retina"
     )
 }
-
+rm(hpa.plot)
+rm(df.intersect)
+rm(cells.hpa)
+rm(cells.intersect)
 
 # For each boat ramp, create a raster with the grid distance
 # from all cells to the given boat ramp location
@@ -119,11 +132,12 @@ for (i in 1:nrow(df.boat.ramps)) {
     val <- hg.mask[cell.idx]
     hg.mask[cell.idx] <- 2
     dist.grid <- gridDistance(hg.mask, 2, omit = NA)
-    plot(dist.grid)
     writeRaster(dist.grid, dest.file, overwrite = TRUE)
     # re-initialise original mask
     hg.mask <- raster(paste(config$data, config$mask, sep="/"))
 }
+
+rm(dest.file, dist.grid)
 
 # Stack individual boat ramp distance rasters
 grid.distances.files <-
@@ -191,15 +205,18 @@ for (hpa.name in unique(hpas$NAME)) {
     }
 }
 
-###############################################
-# Setup Zonation-structure folder for each cell
+rm(masked.recfish, dest.fil, dist.br, polygons)
+
+##################################################
+# Setup Zonation-style folder folder for each cell
 # 
-# sc_cells/cell_{ID}/
-#      {ID}.cmd
-#      features.txt
-#      settings.z5
-#      output/
-###############################################
+# hgmp-rec-fish/sc_cells/cell_{ID}/
+# |---> {ID}.cmd
+# |---> features.txt
+# |---> settings.z5
+# |---> output/
+#
+##################################################
 
 lvls <- levels(habitats)[[1]]
 
