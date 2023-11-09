@@ -1,0 +1,2 @@
+feature list file = features.txt
+analysis area mask layer = ../data/mask_HG.tif

@@ -1,0 +1,43 @@
+[2023-11-09 09:16:19.838] [info] Zonation 5 v1.0
+[2023-11-09 09:16:20.012] [info] Arguments given: --gui --mode=CAZ2 -wa --area=1 C:/Users/jtablada/Documents/Code/HGRecFish/sc_recfish/minimal_settings.z5 C:/Users/jtablada/Documents/Code/HGRecFish/sc_recfish/output
+[2023-11-09 09:16:20.060] [info] Loading project "C:/Users/jtablada/Documents/Code/HGRecFish/sc_recfish/minimal_settings.z5"
+[2023-11-09 09:16:20.131] [info] Using setting: feature list file = features_example1.txt
+[2023-11-09 09:16:20.152] [info] Using setting: analysis area mask layer = ../data/masks/mask_HG.tif
+[2023-11-09 09:16:20.158] [info] Using default setting: curves output interval = 9.99999975e-05
+[2023-11-09 09:16:20.290] [info] Using default setting: max iterations = 500
+[2023-11-09 09:16:20.291] [info] Using default setting: mean ranking error threshold = 0.00999999978
+[2023-11-09 09:16:20.296] [info] Using default setting: smoothing factor = 0
+[2023-11-09 09:16:20.355] [info] Using default setting: stop on plateau = 0
+[2023-11-09 09:16:20.395] [info] Using default setting: zero mode = all
+[2023-11-09 09:16:20.400] [info] Loading feature layer information from "C:\Users\jtablada\Documents\Code\HGRecFish\sc_recfish\features_example1.txt"
+[2023-11-09 09:16:20.479] [info] Validating project
+[2023-11-09 09:16:20.544] [info] Analysis area: 1
+[2023-11-09 09:16:20.545] [info] Reading layer data
+[2023-11-09 09:16:20.608] [info] Reading analysis area mask
+[2023-11-09 09:16:20.613] [info] Gathering data statistics
+[2023-11-09 09:16:20.709] [info] Map dimensions (width * height): 159*194
+[2023-11-09 09:16:20.730] [info] Number of grid cells in map (width * height): 30846
+[2023-11-09 09:16:20.744] [info] Number of grid cells in map with data: 14260
+[2023-11-09 09:16:20.755] [info] Feature layer count: 1
+[2023-11-09 09:16:20.831] [info] Positive weight feature count: 1
+[2023-11-09 09:16:20.945] [info] Negative weight feature count: 0
+[2023-11-09 09:16:21.049] [info] Zero weight feature count: 0
+[2023-11-09 09:16:21.057] [info] Total number of pixels with data across features: 14260
+[2023-11-09 09:16:21.157] [info] Mean feature extent across study area: 98.10%
+[2023-11-09 09:16:21.241] [info] Reading feature layers
+[2023-11-09 09:16:21.383] [info] Memory usage of feature data: 162.52KB
+[2023-11-09 09:16:21.537] [info] Time used to read and preprocess layer data: 0s
+[2023-11-09 09:16:21.784] [info] Computing priority rank
+[2023-11-09 09:16:22.036] [info] Iteration 0, mean ranking error 0%, mean rank change 0%
+[2023-11-09 09:16:22.104] [info] Time used in prioritization: 0s
+[2023-11-09 09:16:22.107] [info] Number of iterations: 1
+[2023-11-09 09:16:22.215] [info] Final convergence level: 0%
+[2023-11-09 09:16:22.331] [info] Area under curve: 0.728803
+[2023-11-09 09:16:22.398] [info] Writing feature info
+[2023-11-09 09:16:22.425] [info] Writing feature curves
+[2023-11-09 09:16:22.486] [info] Writing priority rank map
+[2023-11-09 09:16:22.513] [info] Merging analysis area
+[2023-11-09 09:16:22.527] [info] Total time used: 2s
+[2023-11-09 09:16:22.533] [info] Number of errors: 0
+[2023-11-09 09:16:22.547] [info] Number of warnings: 0
+[2023-11-09 09:16:22.640] [info] Done

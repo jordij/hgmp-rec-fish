@@ -47,3 +47,9 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Outputs
+
+figures/*.png
+output/distance_ramps/*.tif
+output/masked_cells/*.tif

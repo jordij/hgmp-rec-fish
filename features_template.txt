@@ -1,0 +1,5 @@
+"weight" "filename"
+1.0 ../../data/SDMs/KahawaiDem.tif
+1.0 ../../data/SDMs/KahawaiReef.tif
+1.0 ../../data/SDMs/SnapperDem.tif
+1.0 ../../data/SDMs/SnapperReef.tif

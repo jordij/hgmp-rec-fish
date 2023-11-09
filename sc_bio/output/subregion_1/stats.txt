@@ -1,0 +1,21 @@
+Arguments given: --gui --mode=CAZ2 -wa --area=1 C:/Users/jtablada/Documents/Code/HGRecFish/sc_bio/minimal_settings.z5 C:/Users/jtablada/Documents/Code/HGRecFish/sc_bio/output
+Settings filename: C:/Users/jtablada/Documents/Code/HGRecFish/sc_bio/minimal_settings.z5
+Feature list filename: C:\Users\jtablada\Documents\Code\HGRecFish\sc_bio\features.txt
+Map dimensions (width * height): 159*194
+Number of grid cells in map (width * height): 30846
+Number of grid cells in map with data: 14260
+Feature layer count: 5
+Positive weight feature count: 4
+Negative weight feature count: 1
+Zero weight feature count: 0
+Total number of pixels with data across features: 43038
+Mean feature extent across study area: 60.28%
+Memory usage of feature data: 243.13KB
+Time used to read and preprocess layer data: 0s
+Time used in prioritization: 0s
+Number of iterations: 41
+Final convergence level: 0.00964202%
+Area under curve: 0.772850
+Total time used: 0s
+Number of errors: 0
+Number of warnings: 0

@@ -1,0 +1,26 @@
+########################################################################
+# Global settings and variables.
+# Adjust as needed according to your local environment.
+########################################################################
+
+
+data: ./data
+boat.ramps: BoatRamps/HGBoatRampsAlbers.shp
+distance: Distance/EuclideanDistance.tif
+hpas: HPAs/HPAs.shp
+mrs: MarineReserves/HG_MarineReserves.shp
+mask: masks/mask_HG.tif
+habitats: PhysicalHabitats/HG_PhysicalHabitats_1km.tif
+rec.fishing: RecFishingDensity/RecFishVessKm2_HG.tif
+
+output: ./output/
+distance.ramps: distance_ramps/
+masked.cells: masked_cells/
+zonation.cells: ./sc_cells
+zonation.bio: ./sc_bio
+zonation.recfish: ./sc_recfish
+figs: ./figures/
+
+n.ramps: 3
+
+zonation.exe: '"C:/Program Files (x86)/Zonation5/z5w.exe"'

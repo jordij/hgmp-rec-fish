@@ -1,0 +1,2 @@
+"weight" "filename"
+1.0 ../data/RecFishingDensity/RecFishVessKm2_HG.tif
