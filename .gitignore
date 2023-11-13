@@ -53,3 +53,4 @@ rsconnect/
 figures/*.png
 output/distance_ramps/*.tif
 output/masked_cells/*.tif
+output/sc_cells*

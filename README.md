@@ -15,6 +15,6 @@ The analysis is divided into 3 scripts:
 
 `03_combine_final.R`
 
-- Reads all 847 Zonation prioritisation rasters, it combines them (sum) and 
+- Reads all 847 Zonation prioritisation rasters (outputs from previous step), combines them (func=sum) and 
 filters the top 847 cells, which is then saved as a raster file.
 
