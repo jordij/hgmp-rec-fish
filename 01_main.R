@@ -56,7 +56,7 @@ for (i in 1:100) {
         add_row(Method = "spearman", Value=s)
 }
 
-rm(df, sdf, df.clean)
+rm(sdf, df.clean)
 rm(p,k,s)
 
 # Create and save boxplot with correlation values
@@ -89,8 +89,6 @@ ggscatter(
 # Plots for each one of the HPAs
 for (hpa.name in unique(hpas$NAME)) {
     cells.hpa <- cellnumbers(rec_fish, hpas[hpas$NAME == hpa.name,])$cell_
-    print(hpa.name)
-    print(length(cells.hpa))
     df.intersect <- df[cells.hpa,]
     hpa.plot <- ggscatter(df.intersect,
                           x = "Biodiversity",
@@ -106,7 +104,7 @@ for (hpa.name in unique(hpas$NAME)) {
     )
 }
 rm(hpa.plot)
-rm(df.intersect)
+rm(df.intersect, df)
 rm(cells.hpa)
 rm(cells.intersect)
 
@@ -182,7 +180,7 @@ for (hpa.name in unique(hpas$NAME)) {
                 df = df.boat.ramps,
                 pcrs = crs(boat.ramps)
             )
-        # unnest
+        # un-nest
         polygons <- unnest_longer(tibble(polygons), polygons)
         # mask
         masked.recfish <- hg.mask %>%
@@ -205,7 +203,7 @@ for (hpa.name in unique(hpas$NAME)) {
     }
 }
 
-rm(masked.recfish, dest.fil, dist.br, polygons)
+rm(masked.recfish, dest.file, dist.br, polygons)
 
 ##################################################
 # Setup Zonation-style folder folder for each cell
