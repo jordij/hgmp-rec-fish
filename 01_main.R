@@ -56,6 +56,10 @@ for (i in 1:100) {
         add_row(Method = "spearman", Value=s)
 }
 
+plot.df %>%
+    group_by(Method) %>%
+    summarise(total = n(), min=min(Value), max=max(Value)) 
+
 rm(sdf, df.clean)
 rm(p,k,s)
 
@@ -67,6 +71,56 @@ corr.plot <- ggplot(plot.df, aes(x=Method, y=Value)) +
     geom_jitter(color="black", size=0.4, width=0.2)
 ggsave(
     paste(config$figs, "correlation_boxplot.png", sep=""),
+    corr.plot,
+    width=4, height=5,
+    dpi="retina"
+)
+rm(corr.plot)
+rm(plot.df)
+
+# Do the same but using cells where the original rec fishing value was greater
+# than 1 (which is 0-0.01 vessels/km2)
+
+srf <- rec_fish * (rec_fish$VesselsPer > 1)
+srf[srf==0] <- NA
+sub.zon.rec.fish <- mask(zon.rec.fish, srf)
+sub.zon.sc.bio <- mask(zon.sc.bio, srf)
+rstack <- raster::stack(sub.zon.sc.bio, sub.zon.rec.fish)
+stats.pearson <- layerStats(rstack, stat = "pearson", na.rm = TRUE)
+print(stats.pearson)
+
+df <- cbind.data.frame(values(sub.zon.rec.fish), values(sub.zon.sc.bio))
+names(df) <- c("Biodiversity", "Rec fishing")
+df.clean <- df[!is.na(df$Biodiversity) & !is.na(df$`Rec fishing`), ]
+
+# random 500 points, 100 iterations
+plot.df <- data.frame(Method=character(0), Value=numeric(0))
+
+for (i in 1:100) {
+    random.idx <- sample(nrow(df.clean), 500)
+    sdf <- df.clean[random.idx,]
+    p <- cor(sdf$Biodiversity, sdf$`Rec fishing`, method = "pearson")
+    s <- cor(sdf$Biodiversity, sdf$`Rec fishing`, method = "spearman")
+    plot.df <- plot.df %>% 
+        add_row(Method = "pearson", Value=p) %>%
+        add_row(Method = "spearman", Value=s)
+}
+
+plot.df %>%
+    group_by(Method) %>%
+    summarise(total = n(), min=min(Value), max=max(Value)) 
+
+rm(sdf, df.clean)
+rm(p,k,s)
+
+# Create and save boxplot with correlation values
+
+corr.plot <- ggplot(plot.df, aes(x=Method, y=Value)) + 
+    geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+    geom_jitter(color="black", size=0.4, width=0.2)
+ggsave(
+    paste(config$figs, "correlation_boxplot_filtered.png", sep=""),
     corr.plot,
     width=4, height=5,
     dpi="retina"

@@ -55,3 +55,4 @@ output/distance_ramps/*.tif
 output/masked_cells/*.tif
 output/sc_cells*
 sc_cells/*
+*.lock
