@@ -37,7 +37,7 @@ writeRaster(hg.mask, paste(config$output, "sc_cells_highest.tif", sep=""), datat
 hg.mask <- raster(paste(config$data, config$mask, sep="/"))
 hg.mask <- setValues(hg.mask, 0)
 
-# For each cell, find cell with highest value in its prioritisaiton result
+# For each cell, find cell with highest value in its prioritisation result
 # (Zonation run) and then fetch value from Rec Fishing layer. Accumulate values
 # for all looped cells and save results in output raster.
 

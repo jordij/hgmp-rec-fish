@@ -165,6 +165,7 @@ rm(cells.intersect)
 # For each boat ramp, create a raster with the grid distance
 # from all cells to the given boat ramp location
 # Save each raster file to the output folder.
+# Go get a cuppa..
 
 df.boat.ramps <- data.frame(boat.ramps)
 df.boat.ramps$file <- NA
@@ -204,41 +205,30 @@ stacked.grid.distances <- stack(grid.distances.files)
 names(stacked.grid.distances) <- grid.distances.files
 
 
-# Circle with radius from boat ramp to distance of cell of interest
-n.ramps <- config$n.ramps
-
-getRadiusPolygon <- function(i, files, distances, df, pcrs) {
-    r <- df %>% filter(file == files[distances$ix[i]]) %>%
-        st_as_sf(coords = c("x", "y"), crs = pcrs) %>%
-        summarise(geometry = st_combine(geometry)) %>%
-        st_cast("POINT") %>% st_buffer(dist = distances$x[i])
-    return (r)
+getCellsWithinDistance <- function(i, files, distances, cell) {
+    ramp.raster <- raster(files[distances$ix[i]])
+    return (ramp.raster <= ramp.raster[cell])
 }
 
 for (hpa.name in unique(hpas$NAME)) {
     cells.hpa <-
         cellnumbers(rec_fish, hpas[hpas$NAME == hpa.name,])$cell_
     for (cell in cells.hpa) {
+        # Get closest N (config$n.ramps) boat ramps to current cell and load the
+        # boat ramps distance rasters. Then mask out all cells with distance
+        # greater than current cell. Merge result rasters and save to file.
         dist.br <- raster::extract(stacked.grid.distances, cell)
         dist.br <- sort(dist.br, index.return = T, na.last = T)
-        
-        # Generate list of polygons. Polygons are circles with center in boat ramp
-        # location and radius equal to distance from ramp to current cell)
-        
-        polygons <-
+        masks <-
             lapply(
-                1:n.ramps,
-                FUN = getRadiusPolygon,
+                1:config$n.ramps,
+                FUN = getCellsWithinDistance,
                 files = grid.distances.files,
                 distances = dist.br,
-                df = df.boat.ramps,
-                pcrs = crs(boat.ramps)
+                cell=cell
             )
-        # un-nest
-        polygons <- unnest_longer(tibble(polygons), polygons)
-        # mask
-        masked.recfish <- hg.mask %>%
-            mask(polygons$polygons) %>%
+
+        masked.cell.area <- merge(stack(masks)) %>%
             mask(hpas, inverse = TRUE) %>%
             mask(mrs, inverse = TRUE)
         dest.file <- paste(
@@ -250,14 +240,14 @@ for (hpa.name in unique(hpas$NAME)) {
             sep = ""
         )
         # write raster (int)
-        writeRaster(masked.recfish,
+        writeRaster(masked.cell.area,
                     dest.file,
                     overwrite = TRUE,
                     datatype = 'INT2S')
     }
 }
 
-rm(masked.recfish, dest.file, dist.br, polygons)
+rm(masked.cell.area, dest.file, dist.br, masks)
 
 ##################################################
 # Setup Zonation-style folder folder for each cell
