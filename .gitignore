@@ -57,3 +57,6 @@ output/sc_cells*
 sc_cells/*
 *.lock
 *.aux.xml
+*.tif.ovr
+*.tif.xml
+*.tfw
