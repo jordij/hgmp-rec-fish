@@ -60,3 +60,5 @@ sc_cells/*
 *.tif.ovr
 *.tif.xml
 *.tfw
+*.xml
+*.xml
