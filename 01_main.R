@@ -5,7 +5,6 @@ library(sf)
 library(tabularaster)
 library(terra)
 library(tidyverse)
-library(viridis)
 library(yaml)
 
 config <- yaml.load_file("./config.yaml", eval.expr=TRUE)
@@ -63,22 +62,7 @@ plot.df %>%
 rm(sdf, df.clean)
 rm(p,k,s)
 
-# Create and save boxplot with correlation values
-
-corr.plot <- ggplot(plot.df, aes(x=Method, y=Value)) + 
-    geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
-    scale_fill_viridis(discrete = TRUE, alpha=0.6) +
-    geom_jitter(color="black", size=0.4, width=0.2)
-ggsave(
-    paste(config$figs, "correlation_boxplot.png", sep=""),
-    corr.plot,
-    width=4, height=5,
-    dpi="retina"
-)
-rm(corr.plot)
-rm(plot.df)
-
-# Do the same but using cells where the original rec fishing value was greater
+# Plot correlations using cells where the original rec fishing value was greater
 # than 1 (which is 0-0.01 vessels/km2)
 
 srf <- rec_fish * (rec_fish$VesselsPer > 1)
@@ -125,6 +109,32 @@ ggsave(
     width=4, height=5,
     dpi="retina"
 )
+
+maxlim <- max(plot.df$Value)
+minlim <- min(plot.df$Value)
+
+p <- ggplot(plot.df, aes(x=Method, y=Value, fill = Method)) +
+    geom_violin(color="black") + # OR geom_boxplot() 
+    #geom_point(position=position_jitter(0.06), alpha = 3/10, color="black") + 
+    geom_jitter(color="black", size=0.4, width=0.2) +
+    theme_bw() +
+    ylim(minlim, maxlim) +
+    theme(axis.text = element_text(size = 12)) + 
+    theme(axis.title = element_text(size = 14)) + 
+    theme(legend.title = element_text(size = 16)) + 
+    theme(legend.text = element_text(size = 12)) +
+    scale_fill_manual(values=c("#66c2a5","#fc8d62")) +
+    ylab("Correlation coefficient") +
+    xlab("Method") +
+    theme(legend.position="none")
+
+ggsave(
+    paste(config$figs, "correlation_boxplot_filtered_v2.png", sep=""),
+    p,
+    width=4, height=5,
+    dpi="retina"
+)
+
 rm(corr.plot)
 rm(plot.df)
 
