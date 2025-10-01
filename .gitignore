@@ -62,3 +62,14 @@ sc_cells/*
 *.tfw
 *.xml
 *.xml
+*.cpg
+*.shp
+*.dbf
+*.prj
+*.sbn
+*.sbx
+*.shx
+*.shp.xml
+*.tfw
+*.tif.aux
+*.tif.ovr
