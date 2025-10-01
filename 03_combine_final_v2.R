@@ -7,8 +7,7 @@
 
 config <- yaml.load_file("./config.yaml", eval.expr = TRUE)
 
-rec_fish <-
-    raster(paste(config$data, config$rec.fishing, sep = "/"))
+rec_fish <- raster(paste(config$data, config$rec.fishing, sep = "/"))
 hpas <- read_sf(paste(config$data, config$hpas, sep = "/"))
 hg.mask <- raster(paste(config$data, config$mask, sep = "/"))
 
@@ -33,8 +32,8 @@ writeRaster(
 )
 
 # Top 847 cells
-t <- as_tibble(rs.sum[rs.sum > 0,]) %>% arrange(-value)
-threshold <- min(t[1:847,]$value)
+t <- as_tibble(rs.sum[rs.sum > 0, ]) %>% arrange(-value)
+threshold <- min(t[1:847, ]$value)
 
 # Use min value of top 847 cells to filter final added raster rs.sum
 tmpfilter <- rs.sum < threshold
@@ -47,7 +46,7 @@ writeRaster(
 )
 
 # do the same but use a % (let's say keep the top 30%)
-threshold <- min(t[1:(nrow(t) * 0.3),]$value)
+threshold <- min(t[1:(nrow(t) * 0.3), ]$value)
 tmpfilter <- rs.sum < threshold
 filtered.rs.sum <- mask(rs.sum, tmpfilter, maskvalue = TRUE)
 writeRaster(
@@ -63,7 +62,7 @@ mpa.displacement.df <- data.frame()
 for (hpa.name in unique(hpas$NAME)) {
     # Get cell ID
     cells.hpa <-
-        cellnumbers(rec_fish, hpas[hpas$NAME == hpa.name[1],])$cell_
+        cellnumbers(rec_fish, hpas[hpas$NAME == hpa.name[1], ])$cell_
     # Get all zonation cells rasters
     hpa.files <- lapply(cells.hpa, function(cell) {
         cell.str <- paste("/", cell, "/", sep = "")
@@ -72,8 +71,8 @@ for (hpa.name in unique(hpas$NAME)) {
     # Merge and filter top 10%
     rs.hpa <- stack(hpa.files)
     rs.hpa.sum <- calc(rs.hpa, fun = sum, na.rm = TRUE)
-    t <- as_tibble(rs.hpa.sum[rs.hpa.sum > 0,]) %>% arrange(-value)
-    threshold <- min(t[1:(nrow(t) * 0.1),]$value)
+    t <- as_tibble(rs.hpa.sum[rs.hpa.sum > 0, ]) %>% arrange(-value)
+    threshold <- min(t[1:(nrow(t) * 0.1), ]$value)
     tmpfilter <- rs.hpa.sum < threshold
     filtered.rs.sum <- mask(rs.hpa.sum, tmpfilter, maskvalue = TRUE)
     # Normalise to 0-1 using `val = (val - min / max - min)`
@@ -118,38 +117,44 @@ mpa.displacement.df.sum <- mpa.displacement.df %>%
         displacement = mean(displacement, na.rm = TRUE),
         na.rm = TRUE
     )
-#%>%
-#    rename(MPA = mpa)
+#mpa.displacement.df.sum <- mpa.displacement.df.sum %>% rename(mpa = MPA)
 
 mpa.labels <- c(
     "Cape Rodney Okakari Point Marine Reserve extension" = "Cape Rodney-Okakari Point",
-    "Rotoroa Island" = "Rotoroa",                                
-    "Whanganui A Hei Marine Reserve extension" = "Whanganui A Hei",          
-    "Motukawao" = "Motukawao",                                         
-    "Colville Type 1" = "Cape Colville",                                   
-    "Tiritiri Type 1" = "Tiritiri Matangi",                                   
-    "Slipper" = "Slipper Island",                                           
-    "Alderman South" = "Aldermen South",                                     
-    "Aldermen North" = "Aldermen North",                                    
-    "Little Barrier Island" = "Little Barrier - Hauturu",                             
-    "Kawau Bay Type 1" = "Kawau Bay",                               
-    "Rangitoto Motutapu" = "Rangitoto - Motutapu",                                
+    "Rotoroa Island" = "Rotoroa",
+    "Whanganui A Hei Marine Reserve extension" = "Whanganui A Hei",
+    "Motukawao" = "Motukawao",
+    "Colville Type 1" = "Cape Colville",
+    "Tiritiri Type 1" = "Tiritiri Matangi",
+    "Slipper" = "Slipper Island",
+    "Alderman South" = "Aldermen South",
+    "Aldermen North" = "Aldermen North",
+    "Little Barrier Island" = "Little Barrier - Hauturu",
+    "Kawau Bay Type 1" = "Kawau Bay",
+    "Rangitoto Motutapu" = "Rangitoto - Motutapu",
     "Mokohinau Type 1" = "Mokohinau",
     "The Noises" = "Noises"
 )
 
 pc <- ggplot(mpa.displacement.df, aes(distance, displacement)) +
     geom_point(alpha = 3 / 10, color = "black") +
-    geom_point(data = mpa.displacement.df.sum,
-                aes(colour = mpa),
-                alpha = 0.9,
-                size = 4) +
-    facet_wrap( ~ mpa, ncol = 5 ,scales = "fixed", labeller = as_labeller(mpa.labels)) + theme_classic() +
+    geom_point(
+        data = mpa.displacement.df.sum,
+        aes(colour = "#00bfc4"),
+        alpha = 0.9,
+        size = 4
+    ) +
+    facet_wrap(
+        ~ mpa,
+        ncol = 5 ,
+        scales = "fixed",
+        labeller = as_labeller(mpa.labels)
+    ) + theme_classic() +
     xlab("Distance from MPA (km)") + ylab("MPA Displacement Potential") +
     theme(legend.position = "none")
 
 ggsave(
-    paste(config$figs, "pointcloud_faceted.png", sep=""),
+    paste(config$figs, "pointcloud_faceted.png", sep = ""),
     pc,
     width = 10,
     height = 6,
@@ -158,15 +163,13 @@ ggsave(
 
 pc <- ggplot(mpa.displacement.df, aes(distance, displacement)) +
     geom_point(alpha = 3 / 10, aes(colour = mpa)) +
-    geom_point(data = mpa.displacement.df.sum,
-               aes(colour = MPA),
-               size = 4) +
+    geom_point(data = mpa.displacement.df.sum, aes(colour = MPA), size = 4) +
     #facet_wrap(~mpa, scales="fixed") + theme_classic() +
     xlab("Distance from MPA (km)") + ylab("MPA Displacement Potential") +
     theme_classic()
 
 ggsave(
-    paste(config$figs, "pointcloud_faceted_all.png", sep=""),
+    paste(config$figs, "pointcloud_faceted_all.png", sep = ""),
     pc,
     width = 10,
     height = 6,
@@ -211,7 +214,7 @@ hg.mask <- setValues(hg.mask, 0)
 
 for (hpa.name in unique(hpas$NAME)) {
     cells.hpa <-
-        cellnumbers(rec_fish, hpas[hpas$NAME == hpa.name,])$cell_
+        cellnumbers(rec_fish, hpas[hpas$NAME == hpa.name, ])$cell_
     
     for (cell in cells.hpa) {
         output_dir <-

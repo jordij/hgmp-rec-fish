@@ -58,7 +58,7 @@ for (hpa.name in unique(hpas$NAME)) {
         cellnumbers(rec_fish, hpas[hpas$NAME == hpa.name, ])$cell_
     # Get all zonation cells rasters
     hpa.files <- lapply(cells.hpa, function(cell) {
-        cell.str <- paste("/", cell, "/", sep="")
+        cell.str <- paste("/", cell, "/", sep = "")
         files[grepl(cell.str, files)]
     })
     # Merge and filter top 10%
@@ -69,10 +69,10 @@ for (hpa.name in unique(hpas$NAME)) {
     tmpfilter <- rs.hpa.sum < threshold
     filtered.rs.sum <- mask(rs.hpa.sum, tmpfilter, maskvalue = TRUE)
     # Normalise to 0-1 using `val = (val - min / max - min)`
-    minr <- cellStats(filtered.rs.sum, stat=min) 
-    maxr <- cellStats(filtered.rs.sum, stat=max)
+    minr <- cellStats(filtered.rs.sum, stat = min)
+    maxr <- cellStats(filtered.rs.sum, stat = max)
     filtered.rs.sum <- (filtered.rs.sum - minr) / (maxr - minr)
-    # 
+    #
     # writeRaster(
     #     filtered.rs.sum,
     #     paste(
