@@ -6,7 +6,6 @@
 
 
 config <- yaml.load_file("./config.yaml", eval.expr=TRUE)
-habitats <- raster(paste(config$data, config$habitats, sep="/"))
 
 
 for (hpa.name in unique(hpas$NAME)) {

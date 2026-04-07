@@ -1,4 +1,6 @@
-# hgmp-rec-fish
+R code and data used for the manuscript:
+
+Tablada, J., Bennion, M., Geange, S.W., Duffy, C.A., Stephenson, F., Hartill, B.W., Hiddink, J.G. and Stephenson, F., 2025. Spatial assessment of recreational fishing displacement from marine protected areas. *Ecosphere* 
 
 The analysis is divided into 3 scripts:
 
